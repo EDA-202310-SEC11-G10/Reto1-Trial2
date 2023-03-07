@@ -64,7 +64,7 @@ def add_data(data_structs, data):
     d = new_data(data["Año"], data["Código actividad económica"], data["Nombre actividad económica"],
                  data["Código sector económico"], data["Nombre sector económico"], data["Código subsector económico"],
                  data["Nombre subsector económico"], data["Total ingresos netos"], data["Total costos y gastos"],
-                 data["Total saldo a pagar"], data["Total saldo a favor"])
+                 data["Total saldo a pagar"], data["Total saldo a favor"], data["Total retenciones"])
     
     if data["Año"] in data_structs["Anios"]:
         lt.addLast(data_structs["Anios"][data["Año"]], d)
@@ -87,7 +87,7 @@ def add_data(data_structs, data):
 # Funciones para creacion de datos
 
 def new_data(año, codigo, nom_act_ec, codigo_sec_ec,nombre_sec_ec, codigo_subsector,nombre_sebsector,
-             total_ingr_netos, total_costos_gastos,saldo_a_pagar, saldo_favor):
+             total_ingr_netos, total_costos_gastos,saldo_a_pagar, saldo_favor,total_retenciones):
     """
     Crea una nueva estructura para modelar los datos
     """
@@ -103,6 +103,7 @@ def new_data(año, codigo, nom_act_ec, codigo_sec_ec,nombre_sec_ec, codigo_subse
     data["Total costos y gastos"] = total_costos_gastos
     data["Total saldo a pagar"] = saldo_a_pagar
     data["Total saldo a favor"] = saldo_favor
+    data["Total retenciones"] = total_retenciones
 
     return data
 
