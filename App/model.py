@@ -49,7 +49,7 @@ def new_data_structs():
     Inicializa las estructuras de datos del modelo. Las crea de
     manera vacía para posteriormente almacenar la información.
     """
-    data_structs = {"Anios": {} }
+    data_structs = {"Anios": {}, "Subsector_economico": {}}
     data_structs["data"] = lt.newList(datastructure='ARRAY_LIST', cmpfunction=compare)
     
     return data_structs
@@ -74,6 +74,14 @@ def add_data(data_structs, data):
         lt.addLast(data_structs["Anios"][data["Año"]], d)
 
     lt.addLast(data_structs["data"], d)
+    
+    if data["Código subsector económico"] in data_structs["Subsector_economico"]:
+        lt.addLast(data_structs["Subsector_economico"][data["Código subsector económico"]], d)
+          
+    else:
+        data_structs["Subsector_economico"][data["Código subsector económico"]] = lt.newList(datastructure='ARRAY_LIST', cmpfunction=compare)
+        lt.addLast(data_structs["Subsector_economico"][data["Código subsector económico"]], d)
+
     return data_structs
 
 # Funciones para creacion de datos
@@ -147,8 +155,7 @@ def req_2(data_structs):
     """
     Función que soluciona el requerimiento 2
     """
-    # TODO: Realizar el requerimiento 2
-    pass
+    return data_structs
 
 
 def req_3(data_structs):

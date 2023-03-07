@@ -125,8 +125,8 @@ def print_req_2(control):
     """
         Función que imprime la solución del Requerimiento 2 en consola
     """
-    # TODO: Imprimir el resultado del requerimiento 2
-    pass
+    respuesta = controller.req_2(control)
+    return respuesta
 
 
 def print_req_3(control):
@@ -202,7 +202,8 @@ if __name__ == "__main__":
                 print_tabla_req_1(datos,filas)
 
             elif int(inputs) == 3:
-                print_req_2(control)
+                dats = print_req_2(control)
+                print(dats)
 
             elif int(inputs) == 4:
                 print_req_3(control)
