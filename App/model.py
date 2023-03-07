@@ -123,15 +123,24 @@ def req_1(data_structs):
     """
     Función que soluciona el requerimiento 1
     """
-    mayor = 0
-    lista = []
+    respuestas = {}
+    respuestas["data"] = lt.newList(datastructure='ARRAY_LIST')
+    
     for llave_año in data_structs["Anios"]:
+        mayor = 0
         listas_actvidades_por_año = data_structs["Anios"][llave_año]["elements"]
         for actividad in listas_actvidades_por_año:
-            if actividad["Total saldo a pagar"] > mayor:
-                mayor = actividad
+            total_saldo_pagar = actividad["Total saldo a pagar"]
+            total_saldo_a_pagar = int(total_saldo_pagar)
+            if  total_saldo_a_pagar > mayor:
+                mayor = total_saldo_a_pagar
+                resp = actividad
             
-    return lista
+        lt.addLast(respuestas["data"],resp)
+        
+    merg.sort(respuestas["data"], sort_criteria)
+    
+    return respuestas
 
 
 def req_2(data_structs):

@@ -101,6 +101,17 @@ def print_tabla_carga_datos(control,filas):
     tabla = tab(carga, tablefmt='grid', headers='keys', colalign=['right','right','left','right','left','right','left','left','left','left','left'], maxcolwidths=[7,10,20,10,20,15,20,10,10,10,15], maxheadercolwidths=[7,10,20,10,20,15,20,10,10,10,15])
     print(tabla)
 
+def print_tabla_req_1(control,filas):
+    carga = {"Año":[], "Código actividad económica":[], "Nombre actividad económica":[], "Código sector económico":[],
+                         "Nombre sector económico":[], "Código subsector económico":[], "Nombre subsector económico":[],
+                         "Total ingresos netos":[], "Total costos y gastos":[], "Total saldo a pagar":[], "Total saldo a favor":[]}
+
+    for fila in range(0,filas-1):
+        for llave in carga:
+            carga[llave].append(control['data']['elements'][fila][llave])
+    tabla = tab(carga, tablefmt='grid', headers='keys', colalign=['right','right','left','right','left','right','left','left','left','left','left'], maxcolwidths=[7,10,20,10,20,15,20,10,10,10,15], maxheadercolwidths=[7,10,20,10,20,15,20,10,10,10,15])
+    print(tabla)
+    
 
 def print_req_1(control):
     """
@@ -187,7 +198,8 @@ if __name__ == "__main__":
                 
             elif int(inputs) == 2:
                 datos = print_req_1(control)
-                print(datos)
+                filas = controller.data_size(datos)
+                print_tabla_req_1(datos,filas)
 
             elif int(inputs) == 3:
                 print_req_2(control)
