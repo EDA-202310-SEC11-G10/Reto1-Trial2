@@ -91,7 +91,7 @@ def req_2(control):
     impuestos_subsector_ec = model.req_2(control)
     return impuestos_subsector_ec
 
-
+    
 def req_3(control):
     """
     Retorna el resultado del requerimiento 3

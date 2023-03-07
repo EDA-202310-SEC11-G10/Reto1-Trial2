@@ -50,7 +50,7 @@ def print_menu():
     print("Bienvenido")
     print("1- Cargar información")
     print("2- Ejecutar Requerimiento 1")
-    print("3- Ejecutar Requerimiento 2")
+    print("3- Ejecutar Requerimiento 2 - que realmente es el 3")
     print("4- Ejecutar Requerimiento 3")
     print("5- Ejecutar Requerimiento 4")
     print("6- Ejecutar Requerimiento 5")
@@ -112,7 +112,18 @@ def print_tabla_req_1(control,filas):
     tabla = tab(carga, tablefmt='grid', headers='keys', colalign=['right','right','left','right','left','right','left','left','left','left','left'], maxcolwidths=[7,10,20,10,20,15,20,10,10,10,15], maxheadercolwidths=[7,10,20,10,20,15,20,10,10,10,15])
     print(tabla)
     
-
+def print_tabla_req_2(control,filas):
+    carga = {"Año":[], "Código sector económico":[], "Nombre sector económico":[], "Código subsector económico":[], 
+             "Nombre subsector económico":[], "Total de retenciones del subsector económico":[], "Total ingresos netos del subsector económico":[], 
+             "Total costos y gastos del subsector económico":[], "Total saldo por pagar del subsector económico":[], 
+             "Total saldo a favor del subsector económico": []}
+    
+    for fila in range(0,filas-1):
+        for llave in carga:
+            carga[llave].append(control['data']['elements'][fila][llave])
+    tabla = tab(carga, tablefmt='grid', headers='keys', colalign=['right','right','left','right','left','right','left','left','left','left'], maxcolwidths=[7,10,20,10,20,15,20,10,10,10], maxheadercolwidths=[7,10,20,10,20,15,20,10,10,10])
+    print(tabla)
+    
 def print_req_1(control):
     """
         Función que imprime la solución del Requerimiento 1 en consola
@@ -198,12 +209,14 @@ if __name__ == "__main__":
                 
             elif int(inputs) == 2:
                 datos = print_req_1(control)
-                filas = controller.data_size(datos)
-                print_tabla_req_1(datos,filas)
+                filas1 = controller.data_size(datos)
+                print("Subsectores económicos con la menor retención de cada año:")
+                print_tabla_req_1(datos,filas1)
 
             elif int(inputs) == 3:
-                dats = print_req_2(control)
-                print(dats)
+                datos = print_req_2(control)
+                filas = controller.data_size(datos)
+                print_tabla_req_2(datos,filas)
 
             elif int(inputs) == 4:
                 print_req_3(control)
