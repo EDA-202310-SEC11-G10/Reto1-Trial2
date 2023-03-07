@@ -49,8 +49,10 @@ def new_data_structs():
     Inicializa las estructuras de datos del modelo. Las crea de
     manera vacía para posteriormente almacenar la información.
     """
-    #TODO: Inicializar las estructuras de datos
-    pass
+    data_structs = {"Anios": {} }
+    data_structs["data"] = lt.newList(datastructure='ARRAY_LIST', cmpfunction=compare)
+    
+    return data_structs
 
 
 # Funciones para agregar informacion al modelo
@@ -59,18 +61,42 @@ def add_data(data_structs, data):
     """
     Función para agregar nuevos elementos a la lista
     """
-    #TODO: Crear la función para agregar elementos a una lista
-    pass
+    d = new_data(data["Año"], data["Código actividad económica"], data["Nombre actividad económica"],
+                 data["Código sector económico"], data["Nombre sector económico"], data["Código subsector económico"],
+                 data["Nombre subsector económico"], data["Total ingresos netos"], data["Total costos y gastos"],
+                 data["Total saldo a pagar"], data["Total saldo a favor"])
+    
+    if data["Año"] in data_structs["Anios"]:
+        lt.addLast(data_structs["Anios"][data["Año"]], d)
+          
+    else:
+        data_structs["Anios"][data["Año"]] = lt.newList(datastructure='ARRAY_LIST', cmpfunction=compare)
+        lt.addLast(data_structs["Anios"][data["Año"]], d)
 
+    lt.addLast(data_structs["data"], d)
+    return data_structs
 
 # Funciones para creacion de datos
 
-def new_data(id, info):
+def new_data(año, codigo, nom_act_ec, codigo_sec_ec,nombre_sec_ec, codigo_subsector,nombre_sebsector,
+             total_ingr_netos, total_costos_gastos,saldo_a_pagar, saldo_favor):
     """
     Crea una nueva estructura para modelar los datos
     """
-    #TODO: Crear la función para estructurar los datos
-    pass
+    data = {}
+    data["Año"] = año
+    data["Código actividad económica"] = codigo
+    data["Nombre actividad económica"] = nom_act_ec
+    data["Código sector económico"] = codigo_sec_ec
+    data["Nombre sector económico"] = nombre_sec_ec
+    data["Código subsector económico"]= codigo_subsector
+    data["Nombre subsector económico"] = nombre_sebsector
+    data["Total ingresos netos"] = total_ingr_netos
+    data["Total costos y gastos"] = total_costos_gastos
+    data["Total saldo a pagar"] = saldo_a_pagar
+    data["Total saldo a favor"] = saldo_favor
+
+    return data
 
 
 # Funciones de consulta
@@ -87,16 +113,25 @@ def data_size(data_structs):
     """
     Retorna el tamaño de la lista de datos
     """
-    #TODO: Crear la función para obtener el tamaño de una lista
-    pass
-
+    filas = 0
+    for impuesto in data_structs["data"]["elements"]:
+        filas += 1
+        
+    return filas
 
 def req_1(data_structs):
     """
     Función que soluciona el requerimiento 1
     """
-    # TODO: Realizar el requerimiento 1
-    pass
+    mayor = 0
+    lista = []
+    for llave_año in data_structs["Anios"]:
+        listas_actvidades_por_año = data_structs["Anios"][llave_año]["elements"]
+        for actividad in listas_actvidades_por_año:
+            if actividad["Total saldo a pagar"] > mayor:
+                mayor = actividad
+            
+    return lista
 
 
 def req_2(data_structs):
@@ -157,12 +192,17 @@ def req_8(data_structs):
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 
-def compare(data_1, data_2):
+def compare(data_1, data_2, id):
     """
     Función encargada de comparar dos datos
     """
-    #TODO: Crear función comparadora de la lista
-    pass
+    if data_1[id] < data_2[id]:
+        return True
+    elif data_1[id] > data_2[id]:
+        return False
+    else:
+        return "equal"
+
 
 # Funciones de ordenamiento
 
@@ -177,13 +217,19 @@ def sort_criteria(data_1, data_2):
     Returns:
         _type_: _description_
     """
-    #TODO: Crear función comparadora para ordenar
-    pass
+    return cmp_impuestos_by_anio_CAE(data_1, data_2)
 
 
 def sort(data_structs):
     """
     Función encargada de ordenar la lista con los datos
     """
-    #TODO: Crear función de ordenamiento
-    pass
+    return merg.sort(data_structs["data"], sort_criteria)
+
+def cmp_impuestos_by_anio_CAE(data_1, data_2):
+    year = compare(data_1, data_2, "Año")
+    if year == "equal":
+        return compare(data_1, data_2, "Código actividad económica")
+    else:
+        return year
+    

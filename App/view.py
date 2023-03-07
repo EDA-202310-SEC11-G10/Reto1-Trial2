@@ -27,7 +27,7 @@ from DISClib.ADT import list as lt
 from DISClib.ADT import stack as st
 from DISClib.ADT import queue as qu
 assert cf
-from tabulate import tabulate
+from tabulate import tabulate as tab
 import traceback
 
 """
@@ -42,8 +42,8 @@ def new_controller():
     """
         Se crea una instancia del controlador
     """
-    #TODO: Llamar la función del controlador donde se crean las estructuras de datos
-    pass
+    control = controller.new_controller()
+    return control
 
 
 def print_menu():
@@ -59,13 +59,28 @@ def print_menu():
     print("9- Ejecutar Requerimiento 8")
     print("0- Salir")
 
-
+def print_opciones_carga():
+    print()
+    print("1. Small")
+    print("2. 5%")
+    print("3. 10%")
+    print("4. 20%")
+    print("5. 30%")
+    print("6. 50%")
+    print("7. 80%")
+    print("8. Large")
+    
 def load_data(control):
     """
     Carga los datos
     """
-    #TODO: Realizar la carga de datos
-    pass
+    print_opciones_carga()
+    size = int(input("Elija el tamaño del archivo: \n"))
+    print("Cargando información de los archivos ....\n")
+    files=["small.csv","5pct.csv","10pct.csv","20pct.csv","30pct.csv","50pct.csv","80pct.csv", "large.csv"]
+    data = controller.load_data(control,files[size-1])
+    controller.sort(control)
+    return data
 
 
 def print_data(control, id):
@@ -75,12 +90,24 @@ def print_data(control, id):
     #TODO: Realizar la función para imprimir un elemento
     pass
 
+def print_tabla_carga_datos(control,filas):
+    carga = {"Año":[], "Código actividad económica":[], "Nombre actividad económica":[], "Código sector económico":[],
+                         "Nombre sector económico":[], "Código subsector económico":[], "Nombre subsector económico":[],
+                         "Total ingresos netos":[], "Total costos y gastos":[], "Total saldo a pagar":[], "Total saldo a favor":[]}
+
+    for fila in [0,1,2,filas-3,filas-2,filas-1]:
+        for llave in carga:
+            carga[llave].append(control['data']['elements'][fila][llave])
+    tabla = tab(carga, tablefmt='grid', headers='keys', colalign=['right','right','left','right','left','right','left','left','left','left','left'], maxcolwidths=[7,10,20,10,20,15,20,10,10,10,15], maxheadercolwidths=[7,10,20,10,20,15,20,10,10,10,15])
+    print(tabla)
+
+
 def print_req_1(control):
     """
         Función que imprime la solución del Requerimiento 1 en consola
     """
-    # TODO: Imprimir el resultado del requerimiento 1
-    pass
+    datos_org = controller.req_1(control)
+    return  datos_org
 
 
 def print_req_2(control):
@@ -154,10 +181,13 @@ if __name__ == "__main__":
         inputs = input('Seleccione una opción para continuar\n')
         try:
             if int(inputs) == 1:
-                print("Cargando información de los archivos ....\n")
-                data = load_data(control)
+                load_data(control)
+                filas = controller.data_size(control)
+                print_tabla_carga_datos(control,filas)
+                
             elif int(inputs) == 2:
-                print_req_1(control)
+                datos = print_req_1(control)
+                print(datos)
 
             elif int(inputs) == 3:
                 print_req_2(control)

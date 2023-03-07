@@ -35,8 +35,8 @@ def new_controller():
     """
     Crea una instancia del modelo
     """
-    #TODO: Llamar la función del modelo que crea las estructuras de datos
-    pass
+    control = model.new_data_structs()
+    return control
 
 
 # Funciones para la carga de datos
@@ -45,9 +45,13 @@ def load_data(control, filename):
     """
     Carga los datos del reto
     """
-    # TODO: Realizar la carga de datos
-    pass
-
+    file = cf.data_dir + "DIAN/Salida_agregados_renta_juridicos_AG-"+ filename
+    input_file = csv.DictReader(open(file, encoding="utf-8"))
+    
+    for impuesto in input_file:
+        model.add_data(control, impuesto)
+  
+    return control
 
 # Funciones de ordenamiento
 
@@ -55,8 +59,8 @@ def sort(control):
     """
     Ordena los datos del modelo
     """
-    #TODO: Llamar la función del modelo para ordenar los datos
-    pass
+    datos = model.sort(control)
+    return datos
 
 
 # Funciones de consulta sobre el catálogo
@@ -68,13 +72,16 @@ def get_data(control, id):
     #TODO: Llamar la función del modelo para obtener un dato
     pass
 
+def data_size(control):
+    filas = model.data_size(control)
+    return filas
 
 def req_1(control):
     """
     Retorna el resultado del requerimiento 1
     """
-    # TODO: Modificar el requerimiento 1
-    pass
+    impuestos_org_total_saldo_pagar = model.req_1(control) 
+    return impuestos_org_total_saldo_pagar
 
 
 def req_2(control):
