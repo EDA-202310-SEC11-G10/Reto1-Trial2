@@ -49,9 +49,9 @@ def new_controller():
 def print_menu():
     print("Bienvenido")
     print("1- Cargar información")
-    print("2- Ejecutar Requerimiento 1")
+    print("2- Listar las actividades económicas con mayor total saldo a pagar para todos los años disponibles")
     print("3- Ejecutar Requerimiento 2")
-    print("4- Ejecutar Requerimiento 3")
+    print("4- Encontrar el subsector económico con el menor total de retenciones para todos los años disponibles")
     print("5- Ejecutar Requerimiento 4")
     print("6- Ejecutar Requerimiento 5")
     print("7- Ejecutar Requerimiento 6")
