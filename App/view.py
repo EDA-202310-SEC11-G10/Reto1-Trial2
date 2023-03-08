@@ -122,7 +122,59 @@ def print_tabla_req_2(control,filas):
         for llave in carga:
             carga[llave].append(control['data']['elements'][fila][llave])
     tabla = tab(carga, tablefmt='grid', headers='keys', colalign=['right','right','left','right','left','right','left','left','left','left'], maxcolwidths=[7,10,20,10,20,15,20,10,10,10], maxheadercolwidths=[7,10,20,10,20,15,20,10,10,10])
+    print("Subsectores económicos con las menores retenciones de cada año:")
     print(tabla)
+    
+def print_tabla_req_2b(control,año):
+    carga = {"Código actividad económica":[], "Nombre actividad económica":[], "Total retenciones":[], "Total ingresos netos":[], 
+             "Total costos y gastos":[], "Total saldo a pagar":[], "Total saldo a favor": []}
+    
+    for fila in range(0,3):
+        for llave in carga:
+            carga[llave].append(control[fila][llave])
+    tabla = tab(carga, tablefmt='grid', headers='keys', colalign=['right','right','left','right','left','right','left'], maxcolwidths=[15,25,20,10,20,15,20], maxheadercolwidths=[15,25,20,10,20,15,20])
+    print("Tres actvidades que menos aportaron al valor total de retenciones en " + año)
+    print(tabla)
+    
+def print_tabla_2c(datos):
+    for x in datos["elements"]:
+        i  = 0
+        lista_años = x["elements"]
+        año = lista_años[i]["Año"]
+        print_tabla_req_2b(lista_años,año)
+        i += 1
+    
+def print_tabla_req3(control,filas):
+    carga = {"Año":[], "Código sector económico":[], "Nombre sector económico":[], "Código subsector económico":[], 
+             "Nombre subsector económico":[], "Total costos y gastos nómina":[], "Total ingresos netos del subsector económico":[], 
+             "Total costos y gastos del subsector económico":[], "Total saldo por pagar del subsector económico":[], 
+             "Total saldo a favor del subsector económico": []}
+    
+    for fila in range(0,filas-1):
+        for llave in carga:
+            carga[llave].append(control['data']['elements'][fila][llave])
+    tabla = tab(carga, tablefmt='grid', headers='keys', colalign=['right','right','left','right','left','right','left','left','left','left'], maxcolwidths=[7,10,20,10,20,15,20,10,10,10], maxheadercolwidths=[7,10,20,10,20,15,20,10,10,10])
+    print("Subsectores económicos con los mayores costos y gastos de nómina de cada año:")
+    print(tabla)
+    
+def print_tabla_req_3b(control,año):
+    carga = {"Código actividad económica":[], "Nombre actividad económica":[], "Costos y gastos nómina":[], "Total ingresos netos":[], 
+             "Total costos y gastos":[], "Total saldo a pagar":[], "Total saldo a favor": []}
+    
+    for fila in range(0,3):
+        for llave in carga:
+            carga[llave].append(control[fila][llave])
+    tabla = tab(carga, tablefmt='grid', headers='keys', colalign=['right','right','left','right','left','right','left'], maxcolwidths=[15,25,20,10,20,15,20], maxheadercolwidths=[15,25,20,10,20,15,20])
+    print("Tres actvidades que menos aportaron al valor total de costos y gastos de nómina " + año)
+    print(tabla)
+    
+def print_tabla_req_3c(datos):
+    for x in datos["elements"]:
+        i  = 0
+        lista_años = x["elements"]
+        año = lista_años[i]["Año"]
+        print_tabla_req_3b(lista_años,año)
+        i += 1
     
 def print_req_1(control):
     """
@@ -136,17 +188,24 @@ def print_req_2(control):
     """
         Función que imprime la solución del Requerimiento 2 en consola
     """
-    respuesta = controller.req_2(control)
-    return respuesta
+    subsectores_menores_retenciones= controller.req_2(control)
+    return subsectores_menores_retenciones
 
-
+def print_req_2b(control):
+    parte2 = controller.req_2b(control)
+    return parte2
+    
 def print_req_3(control):
     """
         Función que imprime la solución del Requerimiento 3 en consola
     """
-    # TODO: Imprimir el resultado del requerimiento 3
-    pass
+    nomina = controller.req_3(control)
+    return nomina
 
+def print_req_3b(control):
+    parte2 = controller.req_3b(control)
+    return parte2
+    
 
 def print_req_4(control):
     """
@@ -209,17 +268,24 @@ if __name__ == "__main__":
                 
             elif int(inputs) == 2:
                 datos = print_req_1(control)
-                filas1 = controller.data_size(datos)
-                print("Subsectores económicos con la menor retención de cada año:")
-                print_tabla_req_1(datos,filas1)
+                filas = controller.data_size(datos)
+                print_tabla_req_1(datos,filas)
 
             elif int(inputs) == 3:
-                datos = print_req_2(control)
-                filas = controller.data_size(datos)
-                print_tabla_req_2(datos,filas)
+                subsec_menores_ret = print_req_2(control)
+                filas1 = controller.data_size(subsec_menores_ret)
+                print_tabla_req_2(subsec_menores_ret,filas1)
+                
+                datos = print_req_2b(control)
+                print_tabla_2c(datos)
 
             elif int(inputs) == 4:
-                print_req_3(control)
+                costos_gastos_nomina = print_req_3(control)
+                filas1 = controller.data_size(costos_gastos_nomina)
+                print_tabla_req3(costos_gastos_nomina,filas1)
+                
+                datos = print_req_3b(control)
+                print_tabla_req_3c(datos)
 
             elif int(inputs) == 5:
                 print_req_4(control)

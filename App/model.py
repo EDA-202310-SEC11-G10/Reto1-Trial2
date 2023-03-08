@@ -64,7 +64,7 @@ def add_data(data_structs, data):
     d = new_data(data["Año"], data["Código actividad económica"], data["Nombre actividad económica"],
                  data["Código sector económico"], data["Nombre sector económico"], data["Código subsector económico"],
                  data["Nombre subsector económico"], data["Total ingresos netos"], data["Total costos y gastos"],
-                 data["Total saldo a pagar"], data["Total saldo a favor"], data["Total retenciones"])
+                 data["Total saldo a pagar"], data["Total saldo a favor"], data["Total retenciones"],data["Costos y gastos nómina"])
     
     if data["Año"] in data_structs["Anios"]:
         lt.addLast(data_structs["Anios"][data["Año"]], d)
@@ -87,7 +87,7 @@ def add_data(data_structs, data):
 # Funciones para creacion de datos
 
 def new_data(año, codigo, nom_act_ec, codigo_sec_ec,nombre_sec_ec, codigo_subsector,nombre_sebsector,
-             total_ingr_netos, total_costos_gastos,saldo_a_pagar, saldo_favor,total_retenciones):
+             total_ingr_netos, total_costos_gastos,saldo_a_pagar, saldo_favor,total_retenciones,costos_gastos_nomina):
     """
     Crea una nueva estructura para modelar los datos
     """
@@ -104,9 +104,9 @@ def new_data(año, codigo, nom_act_ec, codigo_sec_ec,nombre_sec_ec, codigo_subse
     data["Total saldo a pagar"] = saldo_a_pagar
     data["Total saldo a favor"] = saldo_favor
     data["Total retenciones"] = total_retenciones
+    data["Costos y gastos nómina"] = costos_gastos_nomina
 
     return data
-
 
 # Funciones de consulta
 
@@ -224,7 +224,6 @@ def req_2(data_structs):
             info["Total saldo por pagar del subsector económico"] = total_saldo_por_pagar
             info["Total saldo a favor del subsector económico"] = total_saldo_favor
             
-            
             lt.addLast(dicc_año_retenciones_totales["data"],info)
             
         merg.sort(dicc_año_retenciones_totales["data"],sort_criteria_retencion)
@@ -235,14 +234,134 @@ def req_2(data_structs):
     
     return menores_año
 
+def req_2b(data_structs):
+    
+    lista_global  =lt.newList(datastructure='ARRAY_LIST')
+
+    for llave_años in data_structs["Anios"]:
+        lista_primeros_y_ultimos = lt.newList(datastructure='ARRAY_LIST')
+        lista_años = lt.newList(datastructure='ARRAY_LIST')
+        lista_por_años = data_structs["Anios"][llave_años]["elements"]
+        
+        for actividad in lista_por_años:
+            lt.addLast(lista_años, actividad)
+            
+            merg.sort(lista_años, sort_criteria_retencion_AÑO)
+        
+        for i in range(0,3):
+            actividad = lt.getElement(lista_años,1)
+            lt.addLast(lista_primeros_y_ultimos, actividad)
+            lt.removeFirst(lista_años)
+        
+        lt.addLast(lista_global, lista_primeros_y_ultimos)
+        
+    return lista_global
+
 
 def req_3(data_structs):
     """
     Función que soluciona el requerimiento 3
     """
+    mayores_nomina= {"data": lt.newList(datastructure='ARRAY_LIST')}
     
-    pass
+    for llave_año in data_structs["Anios"]:
+        lista_subsectores = {"codigos": {}}
+        
+        listas_actvidades_por_año = data_structs["Anios"][llave_año]["elements"]
+        for actividad in listas_actvidades_por_año:
+            cod_sub_sector_ec = actividad["Código subsector económico"]
+            
+            if  cod_sub_sector_ec in lista_subsectores["codigos"]:
+                lt.addLast(lista_subsectores["codigos"][cod_sub_sector_ec], actividad)
+          
+            else:
+                lista_subsectores["codigos"][cod_sub_sector_ec] = lt.newList(datastructure='ARRAY_LIST', cmpfunction=compare)
+                lt.addLast(lista_subsectores["codigos"][cod_sub_sector_ec], actividad)
+          
+        codigos = lista_subsectores["codigos"]
+        nomina_total = 0
+        dicc_año_retenciones_totales = {"data": lt.newList(datastructure='ARRAY_LIST')}
+        
+        for llaves in codigos:
+            impuesto = codigos[llaves]["elements"]
+            nomina_total  = 0
+            ingr_netos_totales = 0
+            total_costos_gastos = 0
+            total_saldo_por_pagar = 0
+            total_saldo_favor = 0
+            
+            for elem in impuesto:
+                año = elem["Año"]
+                codigo_sec_econ = elem["Código sector económico"]
+                nombre_sec_econ = elem["Nombre sector económico"]
+                #codigo_subsector = elem["Código subsector económico"]
+                nombre_subsector = elem["Nombre subsector económico"]
+                
+                ingr_netos = elem["Total ingresos netos"]
+                costos_y_gastos = elem["Total costos y gastos"]
+                saldo_por_pagar = elem["Total saldo a pagar"]
+                saldo_favor = elem["Total saldo a favor"]
+                
+                nomina_total_imp  = elem["Costos y gastos nómina"]
+                
+                nomina_impuesto = int(nomina_total_imp )
+                ingr_netos_impuesto = int(ingr_netos)
+                costos_y_gastos = int(costos_y_gastos)
+                saldo_por_pagar = int(saldo_por_pagar)
+                saldo_favor = int(saldo_favor)
+                
+                
+                nomina_total += nomina_impuesto
+                ingr_netos_totales += ingr_netos_impuesto
+                total_costos_gastos += costos_y_gastos
+                total_saldo_por_pagar +=  saldo_por_pagar
+                total_saldo_favor += saldo_favor
+                
+            info = {}
+            info["Año"] = año
+            info["Código sector económico"] = codigo_sec_econ
+            info["Nombre sector económico"] = nombre_sec_econ
+            info["Código subsector económico"] = llaves
+            info["Nombre subsector económico"] = nombre_subsector
+            
+            info["Total costos y gastos nómina"] = nomina_total_imp
+            info["Total ingresos netos del subsector económico"] = ingr_netos_totales
+            info["Total costos y gastos del subsector económico"] =  total_costos_gastos
+            info["Total saldo por pagar del subsector económico"] = total_saldo_por_pagar
+            info["Total saldo a favor del subsector económico"] = total_saldo_favor
+            
+            lt.addLast(dicc_año_retenciones_totales["data"],info)
+            
+        merg.sort(dicc_año_retenciones_totales["data"],sort_criteria_nomina)
+        menor_por_año = lt.firstElement(dicc_año_retenciones_totales["data"])
+        lt.addLast(mayores_nomina["data"], menor_por_año)
+        
+    merg.sort(mayores_nomina["data"],sort_criteria)
+    
+    return mayores_nomina
 
+def req_3b(data_structs):
+    
+    lista_global  =lt.newList(datastructure='ARRAY_LIST')
+
+    for llave_años in data_structs["Anios"]:
+        lista_primeros_y_ultimos = lt.newList(datastructure='ARRAY_LIST')
+        lista_años = lt.newList(datastructure='ARRAY_LIST')
+        lista_por_años = data_structs["Anios"][llave_años]["elements"]
+        
+        for actividad in lista_por_años:
+            lt.addLast(lista_años, actividad)
+            
+            merg.sort(lista_años, sort_criteria_retencion_AÑO)
+        
+        for i in range(0,3):
+            actividad = lt.getElement(lista_años,1)
+            lt.addLast(lista_primeros_y_ultimos, actividad)
+            lt.removeFirst(lista_años)
+        
+        lt.addLast(lista_global, lista_primeros_y_ultimos)
+        
+    return lista_global
 
 def req_4(data_structs):
     """
@@ -297,7 +416,13 @@ def compare(data_1, data_2, id):
     else:
         return "equal"
 
-
+def compare2(data_1, data_2, id):
+    if data_1[id] < data_2[id]:
+        return False
+    elif data_1[id] > data_2[id]:
+        return True
+    else:
+        return "equal"
 # Funciones de ordenamiento
 
 
@@ -342,3 +467,24 @@ def cmp_impuestos_by_reteniones(data_1, data_2):
 
 def sort_criteria_retencion(data_1, data_2):
     return cmp_impuestos_by_reteniones(data_1, data_2)
+
+def sort_criteria_retencion_AÑO(data_1, data_2):
+    return cmp_impuestos_by_retenciones_AÑO(data_1, data_2)
+
+def cmp_impuestos_by_retenciones_AÑO(data_1, data_2):
+    retencion_menor = compare(data_1, data_2, "Total retenciones")
+    return retencion_menor
+
+def cmp_impuestos_nomina(data_1,data_2):
+    mayor_nomina = compare2(data_1, data_2, "Total costos y gastos nómina")
+    return mayor_nomina
+    
+def sort_criteria_nomina(data_1,data_2):
+    return cmp_impuestos_nomina(data_1,data_2)
+
+def sort_criteria_aporte_nomina(data_1,data_2):
+    return cmp_impuestos_aporte_nom(data_1,data_2)
+
+def cmp_impuestos_aporte_nom(data_1,data_2):
+    menor_aporte = compare(data_1,data_2,"Total costos y gastos nómina")
+    return menor_aporte

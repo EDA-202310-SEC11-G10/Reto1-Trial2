@@ -88,18 +88,24 @@ def req_2(control):
     """
     Retorna el resultado del requerimiento 2
     """
-    impuestos_subsector_ec = model.req_2(control)
-    return impuestos_subsector_ec
+    subsectores_menores_retenciones = model.req_2(control)
+    return subsectores_menores_retenciones
 
+def req_2b(control):
+    parte2 = model.req_2b(control)
+    return parte2
     
 def req_3(control):
     """
     Retorna el resultado del requerimiento 3
     """
-    # TODO: Modificar el requerimiento 3
-    pass
+    nomina = model.req_3(control)
+    return nomina
 
-
+def req_3b(control):
+    parte2 = model.req_3b(control)
+    return parte2
+    
 def req_4(control):
     """
     Retorna el resultado del requerimiento 4
