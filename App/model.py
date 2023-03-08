@@ -183,20 +183,44 @@ def req_5(data_structs):
     pass
 
 
-def req_6(data_structs):
+def req_6(data_structs, ano):
     """
     Función que soluciona el requerimiento 6
     """
     # TODO: Realizar el requerimiento 6
-    pass
+    lista_sectores = {}
+    lista_sectores["data"] = lt.newList(datastructure='ARRAY_LIST')
+    for element in data_structs["Anios"][ano]["elements"]:
+        mayor = True
+        for elemento in data_structs["Anios"][ano]["elements"]:
+            if element["Código sector económico"] == elemento["Código sector económico"] and int(elemento["Total ingresos netos"]) > int(element["Total ingresos netos"]):
+                    mayor = False
+        if mayor:
+            lt.addLast(lista_sectores["data"], element)
+    return lista_sectores
 
 
-def req_7(data_structs):
+def req_7(data_structs, top, ano1, ano2):
     """
     Función que soluciona el requerimiento 7
     """
     # TODO: Realizar el requerimiento 7
-    pass
+    lista_top = {}
+    lista_top["Anos"] = lt.newList(datastructure='ARRAY_LIST')
+    for ano in data_structs["Anios"]:
+        if int(ano) >= ano1 and int(ano) <= ano2:
+            lt.addLast(lista_top["Anos"], ano)
+            lista_top[ano] = lt.newList(datastructure='ARRAY_LIST')
+    for anio in lista_top["Anos"]["elements"]:
+        for element in data_structs["Anios"][anio]["elements"]:
+            menor = True
+            for elemento in data_structs["Anios"][anio]["elements"]:
+                while lt.size(lista_top[anio]) < top:
+                    if element["Código actividad económica"] == elemento["Código sector económico"] and int(elemento["Total costos y gastos"]) < int(element["Total costos y gastos"]) and elemento not in lista_top[anio]["elements"] and element not in lista_top[anio]["elements"]:
+                        menor = False
+            if menor:
+                lt.addLast(lista_top[anio], menor)
+    return
 
 
 def req_8(data_structs):
