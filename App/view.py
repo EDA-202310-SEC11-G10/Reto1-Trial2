@@ -228,7 +228,8 @@ def print_req_6(control):
         Función que imprime la solución del Requerimiento 6 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 6
-    pass
+    ano = input("Digite el año desea encontrar la actividad económica con el mayor total de ingresos netos para cada sector económico: ")
+    print(tab((controller.req_6(control, ano))["data"]["elements"], tablefmt='grid', headers='keys', colalign=['right','right','left','right','left','right','left','left','left','left','left'], maxcolwidths=[7,10,15,10,15,15,15,10,10,10,10], maxheadercolwidths=[7,10,15,10,15,15,15,10,10,10,10]))
 
 
 def print_req_7(control):
@@ -236,7 +237,10 @@ def print_req_7(control):
         Función que imprime la solución del Requerimiento 7 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 7
-    pass
+    top = int(input("Digite la cantidad de impuestos para el TOP: "))
+    ano1 = int(input("Digite el año de comienzo: "))
+    ano2 = int(input("Digite el año de finalización: "))
+    print(controller.req_7(control, top, ano1, ano2))
 
 
 def print_req_8(control):
